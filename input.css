@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  #post > h1 {
+    @apply text-6xl font-bold;
+  }
+}

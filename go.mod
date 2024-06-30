@@ -6,6 +6,7 @@ toolchain go1.22.4
 
 require (
 	github.com/a-h/templ v0.2.707
+	github.com/go-chi/chi/v5 v5.1.0
 	github.com/yuin/goldmark v1.7.2
 )
 
