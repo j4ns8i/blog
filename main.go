@@ -5,8 +5,10 @@ import (
 	"context"
 	"embed"
 	"errors"
+	"fmt"
 	"io"
 	"io/fs"
+	"log/slog"
 	"net/http"
 	"path"
 
@@ -21,22 +23,37 @@ import (
 //go:generate go run github.com/a-h/templ/cmd/templ generate
 
 //go:embed posts/*
-var posts embed.FS
+var embedPosts embed.FS
+var posts []fs.DirEntry
 
-//go:embed public/styles.css
-var stylesheet []byte
+//go:embed public/*
+var embedPublic embed.FS
 
 type Blog struct {
 	Content string
 }
 
+func init() {
+	var err error
+	posts, err = embedPosts.ReadDir("posts")
+	if err != nil {
+		panic(err)
+	}
+}
+
 func main() {
 	router := chi.NewRouter()
 	router.Get("/", getRoot)
-	router.Get("/public/styles.css", getStylesheet)
-	router.Get("/blog/{name}", getBlog)
-	router.Get("/api/v0/blog/{name}", apiGetBlog)
-	http.ListenAndServe(":8080", router)
+	publicHandler := http.FileServerFS(embedPublic)
+	router.Get("/public/*", publicHandler.ServeHTTP)
+	router.Get("/blog", getBlog)
+	router.Get("/blog/{name}", getBlogName)
+	router.Get("/api/v0/blog/{name}", apiGetBlogName)
+	addr := "localhost:8080"
+	slog.Info("serving", "address", fmt.Sprintf("http://%s", addr))
+	if err := http.ListenAndServe(addr, router); err != nil {
+		panic(err)
+	}
 }
 
 func unsafe(html string) templ.Component {
@@ -46,19 +63,14 @@ func unsafe(html string) templ.Component {
 	})
 }
 
-func getStylesheet(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/css")
-	w.Write(stylesheet)
-}
-
 func getRoot(w http.ResponseWriter, r *http.Request) {
-	component := templates.Root()
+	component := templates.Home()
 	w.Header().Set("Content-Type", "text/html")
 	component.Render(r.Context(), w)
 }
 
 func readBlogPost(name string) (string, error) {
-	postMd, err := posts.ReadFile(name)
+	postMd, err := embedPosts.ReadFile(name)
 	if err != nil {
 		return "", err
 	}
@@ -71,7 +83,23 @@ func readBlogPost(name string) (string, error) {
 	return buf.String(), nil
 }
 
+func InternalServerError(w http.ResponseWriter, _ *http.Request, err error) {
+	slog.Error("internal server error", "err", err)
+	w.WriteHeader(http.StatusInternalServerError)
+}
+
 func getBlog(w http.ResponseWriter, r *http.Request) {
+	var cmps []templ.Component
+	for _, v := range posts {
+		name := v.Name()
+		link := templ.URL(path.Join("blog", name))
+		cmps = append(cmps, templates.BlogTitle(name, link))
+	}
+	template := templates.GetBlog(cmps...)
+	template.Render(r.Context(), w)
+}
+
+func getBlogName(w http.ResponseWriter, r *http.Request) {
 	name := path.Join("posts", r.PathValue("name"))
 	blogHtml, err := readBlogPost(name)
 	if err != nil {
@@ -89,7 +117,7 @@ func getBlog(w http.ResponseWriter, r *http.Request) {
 	blog.Render(r.Context(), w)
 }
 
-func apiGetBlog(w http.ResponseWriter, r *http.Request) {
+func apiGetBlogName(w http.ResponseWriter, r *http.Request) {
 	name := path.Join("posts", r.PathValue("name"))
 	blogHtml, err := readBlogPost(name)
 	if err != nil {

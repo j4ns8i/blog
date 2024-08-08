@@ -2,8 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Signika Negative';
+  src: url('/public/fonts/SignikaNegative/SignikaNegative-VariableFont_wght.ttf');
+}
+
 @layer components {
   #post > h1 {
-    @apply text-6xl font-bold;
+    @apply text-5xl font-bold mb-6;
   }
 }

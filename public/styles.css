@@ -46,7 +46,7 @@ html,
   -o-tab-size: 4;
      tab-size: 4;
   /* 3 */
-  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: Signika Negative;
   /* 4 */
   font-feature-settings: normal;
   /* 5 */
@@ -555,7 +555,32 @@ video {
 }
 
 #post > h1 {
-  font-size: 3.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 3rem;
   line-height: 1;
   font-weight: 700;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.p-3 {
+  padding: 0.75rem;
+}
+
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'Signika Negative';
+
+  src: url('/public/fonts/SignikaNegative/SignikaNegative-VariableFont_wght.ttf');
 }

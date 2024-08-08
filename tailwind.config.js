@@ -2,7 +2,14 @@
 export default {
   content: ["./templates/**/*.templ"],
   theme: {
-    extend: {},
+    fontFamily: {
+      sans: ['Signika Negative'],
+    },
+    extend: {
+      fontFamily: {
+        "asdf": ["Signika Negative"],
+      },
+    },
   },
   plugins: [],
 }
