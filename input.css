@@ -8,7 +8,25 @@
 }
 
 @layer components {
+  /* for elements that are generated from .md */
+
   #post > h1 {
-    @apply text-5xl font-bold mb-6;
+    @apply text-6xl font-bold py-6;
+  }
+
+  #post > h2 {
+    @apply text-4xl font-bold pb-5 pt-6;
+  }
+
+  #post > h3 {
+    @apply text-3xl font-bold pb-2 pt-4;
+  }
+
+  #post > h4 {
+    @apply text-2xl font-bold pb-1 pt-2;
+  }
+
+  #post > p {
+    @apply text-xl;
   }
 }

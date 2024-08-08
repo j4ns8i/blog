@@ -554,11 +554,43 @@ video {
   --tw-contain-style:  ;
 }
 
+/* for elements that are generated from .md */
+
 #post > h1 {
-  margin-bottom: 1.5rem;
-  font-size: 3rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  font-size: 3.75rem;
   line-height: 1;
   font-weight: 700;
+}
+
+#post > h2 {
+  padding-bottom: 1.25rem;
+  padding-top: 1.5rem;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+}
+
+#post > h3 {
+  padding-bottom: 0.5rem;
+  padding-top: 1rem;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+}
+
+#post > h4 {
+  padding-bottom: 0.25rem;
+  padding-top: 0.5rem;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+}
+
+#post > p {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
 }
 
 .mx-auto {
